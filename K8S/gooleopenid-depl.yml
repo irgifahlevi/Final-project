@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gooleopenid-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gooleopenid
+  template:
+    metadata:
+      labels:
+          app: gooleopenid
+    spec:
+      containers:
+        - name: gooleopenid
+          image: fadliazlinaldi123/gooleopenid:latest

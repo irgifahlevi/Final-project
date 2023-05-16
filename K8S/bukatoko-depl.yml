@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bukatoko-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bukatoko
+  template:
+    metadata:
+      labels:
+          app: bukatoko
+    spec:
+      containers:
+        - name: bukatoko
+          image: fadliazlinaldi123/bukatoko:latest

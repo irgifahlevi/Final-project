@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adadana-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adadana
+  template:
+    metadata:
+      labels:
+          app: adadana
+    spec:
+      containers:
+        - name: adadana
+          image: fadliazlinaldi123/adadanaservice:latest

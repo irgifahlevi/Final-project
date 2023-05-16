@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql # Sets service name
+  labels:
+    app: mssql # Labels and Selectors
+spec:
+  type: NodePort # Sets service type
+  ports:
+    - port: 1433 # Sets port to run the mssql application
+      targetPort: 1433
+  selector:
+    app: mssql
