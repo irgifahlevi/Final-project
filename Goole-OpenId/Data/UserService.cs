@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.ConstrainedExecution;
 using System.Security.Claims;
 using System.Text;
 using BC = BCrypt.Net.BCrypt;
@@ -94,13 +95,23 @@ namespace Goole_OpenId.Data
                         ur.User = user;
                         ur.Role = role;
 
-                        // tambah user dan role ke dalam database
-                        await _userRepo.AddUserAsync(user);
-                        await _userRepo.AddUserRoleAsync(ur);
+                        //cek duplikat username
+                        var cek = await _context.Users.FirstOrDefaultAsync(o => o.Username == user.Username);
+                        if (cek == null)
+                        {
+                            // tambah user dan role ke dalam database
+                            await _userRepo.AddUserAsync(user);
+                            await _userRepo.AddUserRoleAsync(ur);
 
-                        // simpan dan commit
-                        await _context.SaveChangesAsync();
-                        transaction.Commit(); // commit
+                            // simpan dan commit
+                            await _context.SaveChangesAsync();
+                            transaction.Commit(); // commit
+                        }
+                        else
+                        {
+                            transaction.Rollback();
+                            throw new Exception($"User with username: {user.Username} already exists");
+                        }
                     }
                 }
                 catch (Exception ex)
